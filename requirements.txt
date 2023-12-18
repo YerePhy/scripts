@@ -1,0 +1,6 @@
+pyaml==23.9.7
+nibabel==5.2.0
+numpy==1.26.2
+pyaml==23.9.7
+pyprojroot==0.3.0
+torchio==0.19.3
