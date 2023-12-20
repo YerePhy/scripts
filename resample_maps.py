@@ -15,7 +15,6 @@ with open(cfg_file.resolve(), 'r') as file:
 DATA = cfg["data"]
 ACT_NAME = cfg["act_name"]
 ATT_NAME = cfg["att_name"]
-TARGET_XY_SHAPE = cfg["target_xy_shape"]
 TARGET_VOXEL_SIZE = cfg["target_voxel_size"]
 
 logging.basicConfig(
@@ -59,11 +58,10 @@ def get_subject_files_by_name(dirpath: Union[Path, str], filenames: Set[str]) ->
 def apply_pipeline(subject: tio.Subject, act_map_key: str, att_map_key: str) -> tio.Compose:
     """
     Build a torchIO pipeline to resample images
-    in order be square-like in X, Y dims. The images
-    might be padded or cropped in X and/or Y in order
-    to match ``TARGET_XY_SHAPE``, so we recommend
-    that the X, Y dims of the images are close to the
-    X, Y dims in ``TARGET_XY_SHAPE`` to avoid excesive cropping.
+    in order be square-like in X, Y dims. The image
+    may be padded or cropped in Y to match X shape. Thus,
+    it is recommended for Y dim to be close to X dim in order
+    to avoid excesive crops or pads.
 
     Args:
         subject: a ``torchio.Subject``.
@@ -74,7 +72,8 @@ def apply_pipeline(subject: tio.Subject, act_map_key: str, att_map_key: str) -> 
         Subject having the resampled images.
     """
     z_shape = subject[act_map_key].shape[-1]
-    target_shape = [*TARGET_XY_SHAPE, z_shape]
+    x_shape = subject[act_map_key].shape[-3]
+    target_shape = [x_shape, x_shape, z_shape]
     keys = [act_map_key, att_map_key]
     pipeline = tio.Compose([
         tio.Resample(target=act_map_key, include=[att_map_key]),
