@@ -7,7 +7,7 @@ from pathlib import Path
 from pyprojroot import here
 
 
-cfg_file = here().joinpath("configs/resample_maps.yaml")
+cfg_file = here().joinpath("configs/resample_torchio.yaml")
 
 with open(cfg_file.resolve(), 'r') as file:
     cfg = yaml.safe_load(file)
