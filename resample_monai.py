@@ -13,6 +13,7 @@ with open(cfg_file.resolve(), 'r') as file:
 data_root_dir = Path(cfg["data_root_dir"])
 ref_image = data_root_dir.joinpath(cfg["ref_image"])
 mod_image = data_root_dir.joinpath(cfg["mod_image"])
+output_postfix_mod = str(cfg["output_postfix_mod"])
 
 subject = {
     "REF": ref_image,
@@ -28,7 +29,7 @@ pipe = monai.transforms.Compose([
     monai.transforms.ResampleToMatchd(keys=["MOD"], key_dst="REF"),
     monai.transforms.SaveImaged(
         keys=["MOD"], separate_folder=False,
-        output_postfix="cropped", data_root_dir=data_root_dir,
+        output_postfix=output_postfix_mod, data_root_dir=data_root_dir,
         output_dir=data_root_dir, output_ext=".nii")
 ])
 
